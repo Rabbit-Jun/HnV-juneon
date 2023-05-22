@@ -30,3 +30,6 @@ git fetch <브렌치 이름>
 
 git merge origin/master
 #위 명령은 origin/master 브랜치의 변경점을 가져와 로컬 master 브랜치에 반영합니다.
+
+git remote add <remote 이름> <remote URL>
+#원격저장소를 'remote 이름'으로 연결
