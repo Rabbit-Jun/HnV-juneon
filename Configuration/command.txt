@@ -1,0 +1,32 @@
+pip install -r requirements.txt
+#를 하여 requirements.txt에 적힌 것을 다운받는다.
+
+pip freeze > requirements.txt 
+#내가 설치한 라이브러리 requirements.txt에 올려 놓는다. (이 명령어를 실행하면 requirements.txt 를 만들 수 있다)
+
+
+
+ls -Recurse 
+# 현재 경로의 하위 파일들 읽기
+
+win + x 
+#터미널 실행 단축키
+ Get-ChildItem -Path "Program Files (x86)" -Recurse | Where-Object {$_.FullName -like '*kakaotalk'}
+# 하위 경로의 파일 검색하기 여기서는 예시로 카카오 검색
+#관리자 권한으로 실행해야함
+#like 연산자 사용해서 검색하는 거임
+
+conda activate <env-name>
+#가상환경 실행
+conda deactivate
+#가상환경 비활성화
+conda info --envs
+#가상환경 정보들
+conda remove --name <가상환경이름> --all
+#가상환경 제거  -all 옵션을 사용하여 모두 제거
+
+git fetch <브렌치 이름>
+#로컬 저장소(local repository)와 연결된 원격 저장소의 브랜치(remote branch) 정보를 가져와 그 변화를 반영합니다. git pull 명령어와 유사하지만, git fetch 명령어는 원격 저장소에서 변경된 내용을 가져와 브랜치 정보만 업데이트하고 로컬 저장소의 파일은 갱신하지 않습니다.
+
+git merge origin/master
+#위 명령은 origin/master 브랜치의 변경점을 가져와 로컬 master 브랜치에 반영합니다.
