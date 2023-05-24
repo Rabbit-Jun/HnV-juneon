@@ -25,3 +25,11 @@ conda info --envs
 conda remove --name <가상환경이름> --all
 #가상환경 제거  -all 옵션을 사용하여 모두 제거
 
+git fetch <브렌치 이름>
+#로컬 저장소(local repository)와 연결된 원격 저장소의 브랜치(remote branch) 정보를 가져와 그 변화를 반영합니다. git pull 명령어와 유사하지만, git fetch 명령어는 원격 저장소에서 변경된 내용을 가져와 브랜치 정보만 업데이트하고 로컬 저장소의 파일은 갱신하지 않습니다.
+
+git merge origin/master
+#위 명령은 origin/master 브랜치의 변경점을 가져와 로컬 master 브랜치에 반영합니다.
+
+git remote add <remote 이름> <remote URL>
+#원격저장소를 'remote 이름'으로 연결
