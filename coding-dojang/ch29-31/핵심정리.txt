@@ -77,3 +77,60 @@ def factorial(n):   # 재귀호출로 팩토리얼을 구하는 함수
         return 1    # 1을 반환하고 재귀호출을 끝냄
     return n * factorial(n - 1)    # n과 factorial 함수에 n - 1을 넣어서 반환된 값을 곱함
 재귀호출은 반드시 종료 조건을 만들어주어야 합니다. 종료 조건이 없으면 함수가 계속 호출되다가 RecursionError 에러가 발생합니다.
+
+
+
+
+
+
+Q & A
+매개변수는 최대 몇 개까지 지정할 수 있나요?
+
+함수에 매개변수를 직접 지정하는 방식은 매개변수를 255개까지 지정할 수 있습니다. 하지만 *arg와 **kwargs 가변 인수 방식은 리스트(튜플), 딕셔너리의 최대 요소 개수를 따릅니다.
+
+파이썬은 재귀호출을 최대 몇 번까지 할 수 있나요?
+
+파이썬 인터프리터 소스 코드(C 언어)에는 최대 재귀 깊이가 1,000으로 정의되어 있으며 최대 재귀 깊이는 sys 모듈의 getrecursionlimit 함수로 확인할 수 있습니다.
+
+>>> import sys
+>>> sys.getrecursionlimit()
+1000
+만약 최대 재귀 깊이를 늘리려면 sys 모듈의 setrecursionlimit 함수를 사용하면 됩니다.
+
+>>> sys.setrecursionlimit(2000)    # 최대 재귀호출 횟수를 2000으로 늘림
+단, RecursionError가 발생한다고 해서 최대 재귀 깊이를 늘리더라도 문제의 해결책이 되지 못합니다. RecursionError가 발생한다면 종료 조건이 있는지? 있다면 종료 조건에 도달하는지 확인하는 것이 우선입니다.
+
+함수를 한 줄로 만들 수 있나요?
+
+함수는 :(콜론) 바로 뒤에 코드를 입력하면 한 줄로 만들 수 있습니다. 물론 공백 없이 붙여도 되지만 보통 가독성을 위해 한 칸 띄웁니다.
+
+def hello(): print('Hello, world!')
+함수를 변수 또는 리스트에 넣어서 호출할 수 있나요?
+
+함수는 변수에 할당하거나 리스트에 넣어서 호출할 수 있습니다. 단, ( )(괄호)를 붙이지 않고 함수를 그대로 넣어야 합니다. 만약, ()를 붙이면 반환값이 들어갑니다.
+
+def hello():
+    print('Hello, world!')
+ 
+x = hello    # 함수를 변수에 할당
+x()          # Hello, world!: 변수에 들어있는 함수 호출
+ 
+y = [hello, hello]    # 함수를 리스트에 넣음
+y[0]()                # Hello, world!: 리스트에 들어있는 함수 호출
+y[1]()                # Hello, world!: 리스트에 들어있는 함수 호출
+순수 함수와 비순수 함수는 무엇인가요?
+
+순수 함수(pure function)는 함수의 실행이 외부 상태에 영향을 끼치지 않는 함수를 뜻합니다. 따라서 순수 함수는 부수효과(side effect)가 없어야 하고 입력 값이 같으면 언제나 같은 출력 값을 반환합니다.
+
+def add(a, b):      # 함수 실행이 외부 상태에 영향을 끼치지 않음
+    return a + b
+ 
+print(add(1, 2))
+반대로 비순수 함수(impure function)는 수정자 함수(modifier function)라고도 하는데 함수의 실행이 외부 상태에 영향을 끼치는 함수입니다.
+
+number_list = [1, 2, 3]
+ 
+def append_number(n):        # 함수 실행이 외부 상태에 영향을 끼침
+    number_list.append(n)    # 함수 외부에 있는 number_list의 상태가 바뀜
+ 
+append_number(4)
