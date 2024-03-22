@@ -1,2 +1,0 @@
-윈도우 터미널에서 파일 생성
-New-Item -ItemType File -Path 파일이름
