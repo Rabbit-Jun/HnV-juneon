@@ -12,11 +12,11 @@ class WebCrawling:
         self.driver = webdriver.Chrome()
         self.src_values = []
         self.end_point = False
+        self.driver.implicitly_wait(2)
 
         # 웹 사이트 열기
     def open_web(self, url):
         self.driver.get(url)
-        self.driver.implicitly_wait(10)
         # 웹 페이지의 alt속성값이 bread와 일치하는 src를 찾는다
 
     def find_src(self, keyword):
@@ -31,7 +31,7 @@ class WebCrawling:
         ActionChains(self.driver)\
             .scroll_from_origin(scroll_origin, 0, 1000)\
             .perform()
-        time.sleep(2)
+        time.sleep(0.5)
 
     # end 포인트를 찾기위한 함수
     def finde_end(self):
