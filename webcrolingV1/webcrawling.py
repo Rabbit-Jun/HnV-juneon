@@ -2,8 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.actions.wheel_input import ScrollOrigin
-from selenium.common.exceptions import NoSuchElementException, \
-    JavascriptException, StaleElementReferenceException
 import time
 
 
@@ -13,7 +11,7 @@ class WebCrawling:
         self.bread = bread
         self.driver = webdriver.Chrome()
         self.src_values = []
-        self.footer_found = False
+        self.end_point = False
 
         # 웹 사이트 열기
     def open_web(self, url):
@@ -28,32 +26,29 @@ class WebCrawling:
 
         # 스크롤 내리기
     def scroll_down(self):
-        try:
+        scroll_origin = ScrollOrigin.from_viewport(10, 10)
 
-            scroll_origin = ScrollOrigin.from_viewport(10, 10)
+        ActionChains(self.driver)\
+            .scroll_from_origin(scroll_origin, 0, 1000)\
+            .perform()
+        time.sleep(2)
 
-            ActionChains(self.driver)\
-                .scroll_from_origin(scroll_origin, 0, 1000)\
-                .perform()
-            time.sleep(2)
-
-        except NoSuchElementException:
-            footer = self.driver.find_element(By.TAG_NAME, "footer")
-            ActionChains(self.driver)\
-                .scroll_to_element(footer)\
-                .perform()
-            self.footer_found = True
-
-        except JavascriptException:
-            pass
-        except StaleElementReferenceException:
-            pass
+    # end 포인트를 찾기위한 함수
+    def finde_end(self):
+        end_find = self.driver.find_elements(By.TAG_NAME, "div")
+        for end in end_find:
+            if end.text == '더 이상 표시할 콘텐츠가 없습니다.':
+                self.end_point = True
+                break
 
         # 더보기가 나오면 클릭
     def click_seemore(self):
         try:
-            see_more = self.driver.find_element(By.CLASS_NAME, "button")
-            see_more.click()
+            see_more = self.driver.find_elements(By.TAG_NAME, "input")
+            for input_tag in see_more:
+                if input_tag.get_attribute('value') == "결과 더보기":
+                    input_tag.click()
+                    break
         except Exception as e:
             print("더보기 버튼을 찾을 수가 없습니다", e)
 
@@ -68,7 +63,8 @@ class WebCrawling:
                 self.scroll_down()
                 self.click_seemore()
                 self.scroll_down()
-                if self.footer_found:
+                self.finde_end()
+                if self.end_point:
                     break
 
         self.close_web()
