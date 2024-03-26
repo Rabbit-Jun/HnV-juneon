@@ -16,19 +16,21 @@ class Download_Img:
         crawling = WebCrawling(self.urls, self.bread)
         crawling.run_all()
         self.img_url = crawling.src_values
-        return self.img_url
 
     def down(self):
-        if not os.path.exists(self.bread[0]):
-            os.makedirs(self.bread[0])
+        # 디렉토리가 존재하지 않으면 생성
+        folder_name = self.bread[0] if self.bread else "default_folder"
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
 
-        img_get = requests.get(self.img_url)
-        if img_get.status_code == 200:
-            for i, url in enumerate(self.img_url):
-                file_path = os.path.join(self.bread[0],
-                                         f'{self.bread[i]}_{i}.jpg')
+        for i, url in enumerate(self.img_url):
+            img_get = requests.get(url)  # 각 URL에 대한 요청
+            if img_get.status_code == 200:
+                # 파일 이름이 중복되지 않도록 경로 설정
+                file_path = os.path.join(folder_name,
+                                         f'{self.bread[0]}_{i}.jpg')
                 with open(file_path, 'wb') as f:
-                    f.write(img_get.content)
+                    f.write(img_get.content)  # 응답 내용을 파일에 저장
 
     def run_all(self):
         self.get_url()
