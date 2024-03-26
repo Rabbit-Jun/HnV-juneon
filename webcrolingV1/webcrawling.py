@@ -12,15 +12,15 @@ class WebCrawling:
         self.urls = urls
         self.bread = bread
         self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(2)
         self.src_values = []
-        self.span_found = False
+        self.footer_found = False
 
         # 웹 사이트 열기
     def open_web(self, url):
         self.driver.get(url)
-
+        self.driver.implicitly_wait(10)
         # 웹 페이지의 alt속성값이 bread와 일치하는 src를 찾는다
+
     def find_src(self, keyword):
         img_tags = self.driver.find_elements(By.TAG_NAME, "img")
         self.src_values = [img.get_attribute("src") for img in img_tags
@@ -29,19 +29,20 @@ class WebCrawling:
         # 스크롤 내리기
     def scroll_down(self):
         try:
-            span = self.driver.find_element(By.TAG_NAME, "span")
-            ActionChains(self.driver)\
-                .scroll_to_element(span)\
-                .perform()
-            time.sleep(2)
-            self.span_found = True
 
-        except NoSuchElementException:
-            scroll_origin = ScrollOrigin.from_viewport(10, 340)
+            scroll_origin = ScrollOrigin.from_viewport(10, 10)
 
             ActionChains(self.driver)\
                 .scroll_from_origin(scroll_origin, 0, 1000)\
                 .perform()
+            time.sleep(2)
+
+        except NoSuchElementException:
+            footer = self.driver.find_element(By.TAG_NAME, "footer")
+            ActionChains(self.driver)\
+                .scroll_to_element(footer)\
+                .perform()
+            self.footer_found = True
 
         except JavascriptException:
             pass
@@ -67,7 +68,7 @@ class WebCrawling:
                 self.scroll_down()
                 self.click_seemore()
                 self.scroll_down()
-                if self.span_found:
+                if self.footer_found:
                     break
 
         self.close_web()
@@ -78,4 +79,4 @@ bread = list(input('이미지를 구별하기 위한 키워드를 입력해주�
 
 crawling = WebCrawling(urls, bread)
 crawling.run_all()
-print(crawling.alt_values)
+print(crawling.src_values)
