@@ -12,14 +12,16 @@ class WebCrawling:
         self.driver = webdriver.Chrome()
         self.src_values = []
         self.end_point = False
-        self.driver.implicitly_wait(2)
+        self.driver.implicitly_wait(10)
 
         # 웹 사이트 열기
     def open_web(self, url):
         self.driver.get(url)
         # 웹 페이지의 alt속성값이 bread와 일치하는 src를 찾는다
+        time.sleep(1)
 
     def find_src(self, keyword):
+        time.sleep(1)
         img_tags = self.driver.find_elements(By.TAG_NAME, "img")
         self.src_values = [img.get_attribute("src") for img in img_tags
                            if keyword in img.get_attribute("alt")]
@@ -31,10 +33,9 @@ class WebCrawling:
         ActionChains(self.driver)\
             .scroll_from_origin(scroll_origin, 0, 1000)\
             .perform()
-        time.sleep(0.5)
 
     # end 포인트를 찾기위한 함수
-    def finde_end(self):
+    def find_end(self):
         end_find = self.driver.find_elements(By.TAG_NAME, "div")
         for end in end_find:
             if end.text == '더 이상 표시할 콘텐츠가 없습니다.':
@@ -63,7 +64,7 @@ class WebCrawling:
                 self.scroll_down()
                 self.click_seemore()
                 self.scroll_down()
-                self.finde_end()
+                self.find_end()
                 if self.end_point:
                     break
 
