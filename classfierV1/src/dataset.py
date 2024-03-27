@@ -13,7 +13,7 @@ class Bread3Dataset(Dataset):
         self.image_dir = image_dir
         self.transform = transform  # 데이터 전처리를 위한 변환 파이프 라인을 변수에 저장
 
-        self.image.labels = []
+        self.image_labels = []
         for filename in os.listdir(image_dir):
             label = filename.split('_')[0]
             self.image_labels.append((filename, label))

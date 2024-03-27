@@ -23,10 +23,10 @@ def split_dataset(image_dir: os.PathLike, split_rate: float = 0.2) -> None:
     train_files = files[split_point:]
 
     # 후련, 테스트 폴더 생성
-    train_dir = os.pathjoin(image_dir, 'train')
+    train_dir = os.path.join(image_dir, 'train')
     test_dir = os.path.join(image_dir, 'test')
-    os.makedirs(image_dir, "tratin", exist_ok=True)
-    os.makedirs(image_dir, "test", exist_ok=True)
+    os.makedirs(train_dir, exist_ok=True)
+    os.makedirs(test_dir, exist_ok=True)
 
     # 파일을 각각의 폴더로 이동
     for file in train_files:
@@ -35,3 +35,4 @@ def split_dataset(image_dir: os.PathLike, split_rate: float = 0.2) -> None:
     for file in test_files:
         shutil.move(os.path.join(image_dir, file), os.path.join(test_dir,
                                                                 file))
+    return train_dir, test_dir
