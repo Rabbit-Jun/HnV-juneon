@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from src.dataset import Bread3Dataset
 from src.utils import split_dataset
 
-import tqdm
+from tqdm import tqdm
 
 # gpu를 사용
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -35,27 +35,28 @@ def train_one_epoch(dataloader: DataLoader, device, model: nn.Module,
             print(f'loss: {loss:>7f}  [{current:>5d}/{size:>5d}]')
 
 
-def val_one_epoch(dataloader: DataLoader, device, model: nn.Module,
-                  loss_fn: nn.Module) -> None:
-
+def val_one_epoch(dataloader: DataLoader, device, model: nn.Module, loss_fn: nn.Module) -> (float, float):
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
     model.eval()
-    test_loss = 0
-    correct = 0
+    test_loss, correct = 0, 0
+    
     with torch.no_grad():
         for images, targets in dataloader:
             images = images.to(device)
             targets = targets.to(device)
 
             preds = model(images)
-
             test_loss += loss_fn(preds, targets).item()
-            correct += (preds.argmax(1) == targets).float().sum().item()
+            correct += (preds.argmax(1) == targets).type(torch.float).sum().item()
+
     test_loss /= num_batches
     correct /= size
-    print(f'Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n')
+    accuracy = 100 * correct
+    print(f'Test Error: \n Accuracy: {accuracy:>0.1f}%, Avg loss: {test_loss:>8f} \n')
 
+    # 수정된 부분: 검증 손실과 정확도를 반환합니다.
+    return test_loss, accuracy
 
 # 학습
 def train(device):
@@ -70,6 +71,7 @@ def train(device):
 # 데이터 전처리 파이프 라인
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
@@ -88,7 +90,7 @@ def train(device):
     model.to(device)
 
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
     train_losses = []
     val_losses = []
@@ -110,7 +112,7 @@ def train(device):
         if val_accuracy > best_accuracy:
             best_accuracy = val_accuracy
             best_epoch = epoch + 1
-            torch.save(model.state_dict(), 'densenet121_best_model2.pth')
+            torch.save(model.state_dict(), 'densenet121_best_model.pth')
     print(f'Best Validation Accuracy: {best_accuracy:.4f} at Epoch {best_epoch}')
     with open('best_epoch.txt', 'w') as f:
         f.write(str(best_epoch))
