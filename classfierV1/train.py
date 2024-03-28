@@ -40,7 +40,7 @@ def val_one_epoch(dataloader: DataLoader, device, model: nn.Module, loss_fn: nn.
     num_batches = len(dataloader)
     model.eval()
     test_loss, correct = 0, 0
-    
+
     with torch.no_grad():
         for images, targets in dataloader:
             images = images.to(device)
@@ -60,7 +60,7 @@ def val_one_epoch(dataloader: DataLoader, device, model: nn.Module, loss_fn: nn.
 
 # 학습
 def train(device):
-    image_dir = 'data/train'
+    image_dir = 'data/bread'
     train_path, test_path = split_dataset(image_dir)
     batch_size = 32
     num_workers = 0
@@ -113,14 +113,12 @@ def train(device):
         if val_accuracy > best_accuracy:
             best_accuracy = val_accuracy
             best_epoch = epoch + 1
-            torch.save(model.state_dict(), 'densenet121_best_model_3.pth')
+            torch.save(model.state_dict(), 'densenet121_best_model_1.pth')
     print(f'Best Validation Accuracy: {best_accuracy:.4f} at Epoch {best_epoch}')
-    with open('best_epoch.txt', 'w') as f:
-        f.write(str(best_epoch))
-    print('Done!')
+    
 
     # 모델 저장
-    torch.save(model.state_dict(), 'densenet-Bread3_3.pth')
+    torch.save(model.state_dict(), 'densenet-Bread3_1.pth')
     print("Saved PyTorch Model State to densenet-bread3.pth")
 
 

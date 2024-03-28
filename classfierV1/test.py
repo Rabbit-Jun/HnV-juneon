@@ -34,7 +34,7 @@ def main():
     ])
 
     # 테스트 데이터셋 로드
-    test_data = Bread3Dataset('data/train/test', transform=transform)
+    test_data = Bread3Dataset('data/bread/test', transform=transform)
     test_dataloader = DataLoader(test_data, batch_size=32, num_workers=4)
 
     # 모델 설정
@@ -44,7 +44,7 @@ def main():
     model.to(device)
 
     # 모델 상태 로드
-    model.load_state_dict(torch.load('densenet121_best_model_2.pth', map_location=device))
+    model.load_state_dict(torch.load('densenet121_best_model_1.pth', map_location=device))
 
     # 손실 함수 및 최적화 알고리즘 설정
     loss_fn = nn.CrossEntropyLoss()
