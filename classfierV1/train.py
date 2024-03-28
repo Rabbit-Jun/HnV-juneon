@@ -63,7 +63,7 @@ def train(device):
     image_dir = 'data/train'
     train_path, test_path = split_dataset(image_dir)
     batch_size = 32
-    num_workers = 4
+    num_workers = 0
     num_classes = 3  # 클래스 수
     epochs = 10
     # 데이터셋을 훈련과 테스트로 분할
@@ -73,7 +73,8 @@ def train(device):
         transforms.Resize((224, 224)),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225])
     ])
 
     training_data = Bread3Dataset(train_path, transform=transform)
@@ -90,7 +91,7 @@ def train(device):
     model.to(device)
 
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
     train_losses = []
     val_losses = []
@@ -112,14 +113,14 @@ def train(device):
         if val_accuracy > best_accuracy:
             best_accuracy = val_accuracy
             best_epoch = epoch + 1
-            torch.save(model.state_dict(), 'densenet121_best_model.pth')
+            torch.save(model.state_dict(), 'densenet121_best_model_3.pth')
     print(f'Best Validation Accuracy: {best_accuracy:.4f} at Epoch {best_epoch}')
     with open('best_epoch.txt', 'w') as f:
         f.write(str(best_epoch))
     print('Done!')
 
     # 모델 저장
-    torch.save(model.state_dict(), 'densenet-Bread3.pth')
+    torch.save(model.state_dict(), 'densenet-Bread3_3.pth')
     print("Saved PyTorch Model State to densenet-bread3.pth")
 
 
