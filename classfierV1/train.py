@@ -62,10 +62,10 @@ def val_one_epoch(dataloader: DataLoader, device, model: nn.Module, loss_fn: nn.
 def train(device):
     image_dir = 'data/bread'
     train_path, test_path = split_dataset(image_dir)
-    batch_size = 20
+    batch_size = 16
     num_workers = 0
     num_classes = 3  # 클래스 수
-    epochs = 10
+    epochs = 50
     # 데이터셋을 훈련과 테스트로 분할
 
 # 데이터 전처리 파이프 라인
@@ -84,13 +84,13 @@ def train(device):
                                   num_workers=num_workers)
     test_dataloader = DataLoader(test_data, batch_size=batch_size,
                                  num_workers=num_workers)
-
-    model = models.densenet121(pretrained=True)
-    model.classifier = nn.Linear(model.classifier.in_features, num_classes)
+    # 모델 맞추기
+    model = models.efficientnet_b3(pretrained=True)
+    model.classifier = nn.Linear(in_features=1536, out_features=num_classes)
     model.to(device)
 
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = optim.SGD(model.parameters(), lr=1e-4)
 
     train_losses = []
     val_losses = []
@@ -123,3 +123,4 @@ def train(device):
 
 if __name__ == '__main__':
     train(device)
+````
